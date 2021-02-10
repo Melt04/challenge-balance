@@ -1,22 +1,33 @@
 /** @format */
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-import NavDropdown from 'react-bootstrap/NavDropdown'
+
 import React from 'react'
+
+import { LinkContainer } from 'react-router-bootstrap'
 
 function NavBar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="#home">Presupuesto</Navbar.Brand>
+      <Navbar.Brand>Presupuesto</Navbar.Brand>
+
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse id="responsive-navbar-nav">
         <Nav className="mr-auto">
-          <Nav.Link href="#features">Alta</Nav.Link>
-          <Nav.Link href="#pricing">Modificacion</Nav.Link>
-          <Nav.Link href="#pricing">Baja</Nav.Link>
+          <LinkContainer to="/form">
+            <Nav.Link>Alta</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/?modifier=edit">
+            <Nav.Link>Modificacion</Nav.Link>
+          </LinkContainer>
+          <LinkContainer to="/?modifier=delete">
+            <Nav.Link>Baja</Nav.Link>
+          </LinkContainer>
         </Nav>
         <Nav>
-          <Nav.Link href="#deets">HOME</Nav.Link>
+          <LinkContainer to="/">
+            <Nav.Link>HOME</Nav.Link>
+          </LinkContainer>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

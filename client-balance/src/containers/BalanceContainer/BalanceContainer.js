@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react'
 import { useBalanceContext } from '../../context/BalanceContextProvider'
 
+import { useParams } from 'react-router-dom'
 import OperationList from '../../components/OperationList/OperationList'
 
 import './BalanceContainer.css'
@@ -17,7 +18,6 @@ function BalanceContainer() {
     setBalance,
     setTypeOperation,
   } = useBalanceContext()
-
   useEffect(async () => {
     let response = await fetch('http://localhost:3002/api/typeOperations/')
     const typeOperationJson = await response.json()
@@ -43,7 +43,20 @@ function BalanceContainer() {
     setBalance(getBalance)
     setOperations(getOperations)
   }, [])
-
+  const handleEditOperation = async (id, Operation) => {
+    await fetch('http://localhost:3002/api/balance/10', {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        balance: {
+          monto: 999,
+        },
+      }),
+    })
+  }
   return (
     <Container fluid="md" style={{ textAlign: 'center' }}>
       <Row>
@@ -62,7 +75,12 @@ function BalanceContainer() {
         <h1 className="column-balance-container">Ultimas Operaciones</h1>
       </Row>
       <Row style={{ width: '100%' }}>
-        {operations.length > 0 && <OperationList operations={operations} />}
+        {operations.length > 0 && (
+          <OperationList
+            operations={operations}
+            handleEdit={handleEditOperation}
+          />
+        )}
       </Row>
     </Container>
   )
