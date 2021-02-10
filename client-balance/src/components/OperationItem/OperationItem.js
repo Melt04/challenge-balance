@@ -3,17 +3,22 @@
 import React from 'react'
 
 import { useBalanceContext } from '../../context/BalanceContextProvider'
-
-function OperationItem({ operationItem }) {
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import './OperationItem.css'
+function OperationItem({ operationItem, index }) {
   const { typeOperation } = useBalanceContext()
+  const operation = typeOperation[operationItem.typeOperationId]
+
   return (
-    <div>
-      <p>
-        {' '}
-        monto {operationItem.monto} categoria {operationItem.concepto} Tipo{' '}
-        {typeOperation[operationItem.typeOperationId]}
-      </p>
-    </div>
+    <Row>
+      <Col>{index}</Col>
+      <Col className={operation === 'egreso' ? 'set-egreso' : 'set-ingreso'}>
+        {operationItem.monto}
+      </Col>
+      <Col>{operationItem.concepto}</Col>
+      <Col>{operation}</Col>
+    </Row>
   )
 }
 

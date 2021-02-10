@@ -4,6 +4,8 @@ import React, { useEffect } from 'react'
 import { useBalanceContext } from '../../context/BalanceContextProvider'
 
 import OperationList from '../../components/OperationList/OperationList'
+
+import './BalanceContainer.css'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -43,20 +45,23 @@ function BalanceContainer() {
   }, [])
 
   return (
-    <Container fluid="md" style={{ background: 'red', textAlign: 'center' }}>
+    <Container fluid="md" style={{ textAlign: 'center' }}>
       <Row>
-        <Col md={6} style={{ background: 'white' }}>
+        <Col md={6}>
           <h1>Balance</h1>
         </Col>
-        <Col style={{ background: 'blue', fontSize: '40px' }}>{balance}</Col>
+        <Col
+          style={{ fontSize: '40px' }}
+          className={balance > 0 ? 'balance-positive' : 'balance-negative'}
+        >
+          {balance}
+        </Col>
       </Row>
-      {/*  <Row>
-        <Col>{balance}</Col>
-      </Row> */}
-      <Row>
-        <h1>Operaciones</h1>
+
+      <Row className="row-balance">
+        <h1 className="column-balance-container">Ultimas Operaciones</h1>
       </Row>
-      <Row>
+      <Row style={{ width: '100%' }}>
         {operations.length > 0 && <OperationList operations={operations} />}
       </Row>
     </Container>
