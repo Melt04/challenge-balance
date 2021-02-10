@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize')
 const db = require('../index')
 
-const Operation = db.define('operations', {
+const Balance = db.define('balance', {
   concepto: {
     type: Sequelize.TEXT,
     allowNull: false,
@@ -13,8 +13,8 @@ const Operation = db.define('operations', {
   },
   fecha: {
     type: Sequelize.DATE,
-    allowNull: false,
+    defaultValue: Sequelize.NOW(),
   },
 })
-Operation.sync({ force: true })
-module.exports = Operation
+
+module.exports = Balance
