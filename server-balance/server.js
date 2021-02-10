@@ -5,6 +5,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const sequelize = require('./db/index')
 const balanceRouter = require('./routes/balance')
+const typeOperations = require('./routes/typeOperations')
 const { initValues } = require('./db/models/typesOperation')
 
 const PORT = process.env.PORT || '3002'
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || '3002'
 server.use(cors())
 server.use(bodyParser.json())
 server.use('/api/balance/', balanceRouter)
+server.use('/api/typeOperations/', typeOperations)
 
 server.listen(PORT, async () => {
   try {
