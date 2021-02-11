@@ -4,17 +4,19 @@ import React, { useState } from 'react'
 import { Container } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner'
 import OperationForm from '../../components/OperationForm/OperationForm'
+import Alert from 'react-bootstrap/Alert'
 
-import { useGetTypeOperations } from '../../hooks'
-
-function OperationContainer() {
-  const { typeOperation } = useGetTypeOperations(
-    `http://localhost:3002/api/typeOperations/`
-  )
-  const initValue = { concepto: '', monto: '', typeOperationId: '', fecha: '' }
+import { useBalanceContext } from '../../context/BalanceContextProvider'
+function OperationContainer({ initOperation }) {
+  const { typeOperation, handlePost, loading, error } = useBalanceContext()
+  const initValue = initOperation || {
+    concepto: '',
+    monto: '',
+    typeOperationId: '',
+    fecha: new Date().toISOString().slice(0, 10),
+  }
   const [newOperation, setNewOperation] = useState(initValue)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+
   const onChangeHandler = (e) => {
     const { target } = e
     let { name, value } = target
@@ -25,34 +27,11 @@ function OperationContainer() {
   }
   const submitHandler = async (e) => {
     e.preventDefault()
-    setLoading(true)
-    try {
-      const response = await fetch('http://localhost:3002/api/balance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          balance: {
-            ...newOperation,
-          },
-        }),
-      })
-
-      const data = await response.json()
-      if (response.status !== 200) {
-        throw new Error(data.message)
-      }
-      console.log(data)
-      setLoading(false)
-      alert('Alta realizada')
-      setNewOperation(initValue)
-    } catch (e) {
-      setLoading(false)
-      setError(true)
-      setNewOperation(initValue)
-      alert(`Error realizando el alta: ${e} `)
-    }
+    console.log(newOperation)
+    await handlePost(newOperation)
+  }
+  const clearHandler = () => {
+    setNewOperation(initValue)
   }
 
   return (
@@ -63,6 +42,7 @@ function OperationContainer() {
           submitHandler={submitHandler}
           onChangeHandler={onChangeHandler}
           newOperation={newOperation}
+          clearHandler={clearHandler}
         />
       ) : (
         <Container fluid style={{ textAlign: 'center' }}>
@@ -74,6 +54,11 @@ function OperationContainer() {
           >
             <span className="sr-only">Loading...</span>
           </Spinner>
+        </Container>
+      )}
+      {error && (
+        <Container style={{ textAlign: 'center' }}>
+          <Alert variant="danger">{error}</Alert>
         </Container>
       )}
     </div>

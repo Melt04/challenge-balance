@@ -3,10 +3,8 @@
 import { useEffect, useState } from 'react'
 
 const useGetTypeOperations = (url) => {
-  console.log(url)
   const [typeOperation, settypeOperation] = useState(null)
   useEffect(async () => {
-    console.log(url)
     let response = await fetch(url)
     const typeOperationJson = await response.json()
     let getTypeOperation = {}

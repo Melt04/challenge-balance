@@ -9,6 +9,7 @@ import NotFound from './components/NotFound/NotFound'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 
 import OperationContainer from './containers/OperationContainer/OperationContainer'
+import OperationEditContainer from './containers/OperationEditContainer/OperationEditContainer'
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
             </Route>
             <Route exact path="/form">
               <OperationContainer />
+            </Route>
+            <Route exact path="/edit/:id">
+              <OperationEditContainer />
             </Route>
 
             <Route>

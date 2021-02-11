@@ -17,6 +17,7 @@ function OperationList({ operations, typeOperation }) {
         <Col>Monto</Col>
         <Col>Concepto</Col>
         <Col>Tipo de Operacion</Col>
+        <Col>Fecha</Col>
         {modifier === 'delete' && <Col>Delete</Col>}
         {modifier === 'edit' && <Col>Edit</Col>}
       </Row>
