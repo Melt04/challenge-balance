@@ -26,5 +26,5 @@ server.listen(PORT, async () => {
 
 server.use((err, req, res, next) => {
   const status = err.code || 500
-  res.status(status).json({ message: err.message })
+  res.status(status).json({ error: err.message })
 })

@@ -11,8 +11,11 @@ function BalanceContextProvider({ children }) {
   const [refresh, setRefresh] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSucces] = useState(null)
 
   const handleDelete = async (id) => {
+    setError(false)
+    setSucces(false)
     const response = await fetch(`http://localhost:3002/api/balance/${id}`, {
       method: 'DELETE',
     })
@@ -20,8 +23,9 @@ function BalanceContextProvider({ children }) {
     setRefresh(!refresh)
   }
   const handleEdit = async (editOperation, id) => {
+    setError(false)
+    setSucces(false)
     try {
-      console.log(editOperation)
       const response = await fetch(`http://localhost:3002/api/balance/${id}`, {
         method: 'PATCH',
         headers: {
@@ -34,16 +38,19 @@ function BalanceContextProvider({ children }) {
         }),
       })
       const data = await response.json()
-      setRefresh(!refresh)
       if (response.status !== 200) {
         throw new Error(data.message)
       }
+      setSucces(true)
+      setRefresh(!refresh)
     } catch (e) {
       setError(e.message)
       setRefresh(!refresh)
     }
   }
   const handlePost = async (newOperation) => {
+    setError(false)
+    setSucces(false)
     try {
       const response = await fetch('http://localhost:3002/api/balance', {
         method: 'POST',
@@ -56,17 +63,19 @@ function BalanceContextProvider({ children }) {
           },
         }),
       })
+
       const data = await response.json()
-      setRefresh(!refresh)
       if (response.status !== 200) {
-        throw new Error(data.message)
+        throw new Error(data.error)
       }
+      setSucces(true)
+      setRefresh(!refresh)
+      console.log(success)
     } catch (e) {
       setError(e.message)
-      setRefresh(!refresh)
+      console.dir(e.message)
     }
   }
-
   const fetchTypeOperations = async () => {
     let response = await fetch(`
     http://localhost:3002/api/typeOperations/
@@ -81,6 +90,7 @@ function BalanceContextProvider({ children }) {
   const fetchBalance = async (typeOperation) => {
     if (!typeOperation) return
     setLoading(true)
+    setSucces(null)
     const response = await fetch('http://localhost:3002/api/balance')
     const balanceJson = await response.json()
     let getBalance = 0
@@ -105,7 +115,6 @@ function BalanceContextProvider({ children }) {
   useEffect(async () => {
     fetchBalance(typeOperation)
   }, [typeOperation, refresh])
-
   return (
     <BalanceContext.Provider
       value={{
@@ -117,6 +126,7 @@ function BalanceContextProvider({ children }) {
         loading,
         error,
         handleEdit,
+        success,
       }}
     >
       {children}

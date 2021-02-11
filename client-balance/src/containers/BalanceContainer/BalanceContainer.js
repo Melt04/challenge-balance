@@ -11,7 +11,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 function BalanceContainer() {
   const { typeOperation, operations, balance, loading } = useBalanceContext()
-
   const handleEditOperation = async (id, Operation) => {
     await fetch('http://localhost:3002/api/balance/10', {
       method: 'PATCH',
@@ -65,30 +64,6 @@ function BalanceContainer() {
           </Row>
         </>
       )}
-      {/* <Row>
-        <Col md={6}>
-          <h1>Balance</h1>
-        </Col>
-        <Col
-          style={{ fontSize: '40px' }}
-          className={balance > 0 ? 'balance-positive' : 'balance-negative'}
-        >
-          {balance}
-        </Col>
-      </Row>
-
-      <Row className="row-balance">
-        <h1 className="column-balance-container">Ultimas Operaciones</h1>
-      </Row>
-      <Row style={{ width: '100%' }}>
-        {operations.length > 0 && typeOperation ? (
-          <OperationList
-            typeOperation={typeOperation}
-            operations={operations}
-            handleEdit={handleEditOperation}
-          />
-        ) : null}
-      </Row> */}
     </Container>
   )
 }

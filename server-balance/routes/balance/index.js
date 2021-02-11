@@ -43,7 +43,7 @@ router.post('/', async (req, res, next) => {
       error.status = 500
       return next(error)
     }
-    res.send('ok')
+    res.json({ message: 'Balance created' })
   } catch (e) {
     const error = new Error(e.message)
     error.status = 500

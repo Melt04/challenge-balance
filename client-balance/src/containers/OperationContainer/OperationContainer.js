@@ -5,10 +5,18 @@ import { Container } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner'
 import OperationForm from '../../components/OperationForm/OperationForm'
 import Alert from 'react-bootstrap/Alert'
+import { useHistory } from 'react-router-dom'
 
 import { useBalanceContext } from '../../context/BalanceContextProvider'
 function OperationContainer({ initOperation }) {
-  const { typeOperation, handlePost, loading, error } = useBalanceContext()
+  const {
+    typeOperation,
+    handlePost,
+    loading,
+    error,
+    success,
+  } = useBalanceContext()
+  let history = useHistory()
   const initValue = initOperation || {
     concepto: '',
     monto: '',
@@ -36,6 +44,7 @@ function OperationContainer({ initOperation }) {
 
   return (
     <div>
+      {success && history.push('/')}
       {typeOperation && !loading ? (
         <OperationForm
           typeOperation={typeOperation}

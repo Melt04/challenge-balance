@@ -13,18 +13,19 @@ function OperationItem({ operationItem, index, typeOperation }) {
   const operation = typeOperation[operationItem.typeOperationId]
   const { handleDelete } = useBalanceContext()
   const modifier = useQuery().get('modifier')
+
   return (
     <Row className="row-operation-item">
-      <Col>{index}</Col>
-      <Col className={operation === 'egreso' ? 'set-egreso' : 'set-ingreso'}>
-        {operationItem.monto}
+      <Col md>Numero : {index}</Col>
+      <Col mdclassName={operation === 'egreso' ? 'set-egreso' : 'set-ingreso'}>
+        Monto : {operationItem.monto}
       </Col>
-      <Col>{operationItem.concepto}</Col>
-      <Col>{operation}</Col>
-      <Col>{operationItem.fecha}</Col>
+      <Col md>Concepto : {operationItem.concepto}</Col>
+      <Col md>Tipo : {operation}</Col>
+      <Col md>Fecha : {operationItem.fecha.slice(0, 10)}</Col>
 
       {modifier === 'edit' && (
-        <Col>
+        <Col md>
           <Link to={`/edit/${operationItem.id}`}>
             <Button block variant="warning">
               Edit
@@ -33,7 +34,7 @@ function OperationItem({ operationItem, index, typeOperation }) {
         </Col>
       )}
       {modifier === 'delete' && (
-        <Col>
+        <Col md>
           <Button
             block
             variant="danger"
