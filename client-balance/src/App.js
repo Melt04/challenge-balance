@@ -8,7 +8,7 @@ import BalanceContextProvider from './context/BalanceContextProvider'
 import NotFound from './components/NotFound/NotFound'
 import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
 
-import OperationForm from './components/OperationForm/OperationForm'
+import OperationContainer from './containers/OperationContainer/OperationContainer'
 
 function App() {
   return (
@@ -21,8 +21,9 @@ function App() {
               <BalanceContainer />
             </Route>
             <Route exact path="/form">
-              <OperationForm />
+              <OperationContainer />
             </Route>
+
             <Route>
               <NotFound />
             </Route>

@@ -2,18 +2,17 @@
 
 import React, { useState } from 'react'
 
-import { useBalanceContext } from '../../context/BalanceContextProvider'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import './OperationItem.css'
-import useQuery from '../../hooks'
-function OperationItem({ operationItem, index }) {
-  const { typeOperation } = useBalanceContext()
+import { useQuery } from '../../hooks'
+import { Button } from 'react-bootstrap'
+function OperationItem({ operationItem, index, typeOperation }) {
   const operation = typeOperation[operationItem.typeOperationId]
   const [edit, setEdit] = useState(false)
   const modifier = useQuery().get('modifier')
   return (
-    <Row>
+    <Row className="row-operation-item">
       {edit ? <input value={index} /> : <Col>{index}</Col>}
       <Col className={operation === 'egreso' ? 'set-egreso' : 'set-ingreso'}>
         {operationItem.monto}
@@ -28,7 +27,9 @@ function OperationItem({ operationItem, index }) {
       )}
       {modifier === 'delete' && (
         <Col>
-          <button onClick={() => setEdit(!edit)}>Delete</button>
+          <Button block onClick={() => setEdit(!edit)}>
+            Delete
+          </Button>
         </Col>
       )}
     </Row>

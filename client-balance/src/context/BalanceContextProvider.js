@@ -7,7 +7,6 @@ export const useBalanceContext = () => useContext(BalanceContext)
 function BalanceContextProvider({ children }) {
   const [balance, setBalance] = useState(0)
   const [operations, setOperations] = useState([])
-  const [typeOperation, setTypeOperation] = useState(null)
 
   return (
     <BalanceContext.Provider
@@ -16,8 +15,6 @@ function BalanceContextProvider({ children }) {
         balance,
         setOperations,
         operations,
-        typeOperation,
-        setTypeOperation,
       }}
     >
       {children}

@@ -7,3 +7,9 @@
 .set-ingreso {
   color: green;
 }
+.row-operation-item {
+  border: solid black 1px;
+  border-radius: 10px;
+  padding: 4%;
+  background-color: rgb(183, 245, 253);
+}
