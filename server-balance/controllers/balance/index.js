@@ -1,21 +1,35 @@
 /** @format */
 const Balance = require('../../db/models/balances')
-
+const { findUserByEmail } = require('../user')
+const { getDecodedToken } = require('../../utils')
 const getAllbalances = () => {
   return Balance.findAll()
 }
-const createBalance = (balance) => {
-  return Balance.create(balance)
+const createBalance = async (balance, id) => {
+  return Balance.create({ ...balance, userId: id })
 }
-
-const editBalance = (id, balance) => {
-  return Balance.update(balance, {
+const getBalanceById = async (id) => {
+  return Balance.findAll({
     where: {
-      id: id,
+      userId: id,
     },
   })
 }
-const deleteBalance = (id) => {
-  return Balance.destroy({ where: { id: id } })
+const editBalance = (id, balance, userId) => {
+  return Balance.update(balance, {
+    where: {
+      id: id,
+      userId,
+    },
+  })
 }
-module.exports = { getAllbalances, createBalance, editBalance, deleteBalance }
+const deleteBalance = async (id, userId) => {
+  return Balance.destroy({ where: { id: id, userId } })
+}
+module.exports = {
+  getAllbalances,
+  createBalance,
+  editBalance,
+  deleteBalance,
+  getBalanceById,
+}

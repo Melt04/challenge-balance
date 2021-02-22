@@ -41,7 +41,7 @@ const balanceUpdateSchema = {
 function validateSchema(schema, schemaValidation) {
   const balanceValidator = new Validator()
   const result = balanceValidator.validate(schema, schemaValidation)
-  console.log(result)
+
   return result.errors.map((error) => error.stack)
 }
 module.exports = { validateSchema, balanceCreateSchema, balanceUpdateSchema }

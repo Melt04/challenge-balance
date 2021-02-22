@@ -3,6 +3,8 @@
 const express = require('express')
 const router = express.Router()
 
+const { validateLoggedMiddleware } = require('../../middleware')
+
 const {
   validateSchema,
   balanceCreateSchema,
@@ -14,6 +16,7 @@ const {
   editBalance,
   createBalance,
   deleteBalance,
+  getBalanceById,
 } = require('../../controllers/balance')
 
 router.get('/', async (_, res, next) => {
@@ -26,10 +29,14 @@ router.get('/', async (_, res, next) => {
     next(error)
   }
 })
-
-router.post('/', async (req, res, next) => {
+router.get('/balances', validateLoggedMiddleware, async (req, res) => {
+  const { userId } = req
+  const balance = await getBalanceById(userId)
+  return res.status(200).json(balance)
+})
+router.post('/', validateLoggedMiddleware, async (req, res, next) => {
   const { balance } = req.body
-
+  const { userId } = req
   try {
     const validation = validateSchema(balance, balanceCreateSchema)
     if (validation.length > 0) {
@@ -37,7 +44,8 @@ router.post('/', async (req, res, next) => {
       error.status = 400
       return next(error)
     }
-    const newBalance = await createBalance(balance)
+    const newBalance = await createBalance(balance, userId)
+
     if (!newBalance) {
       const error = new Error('Failed to create balance')
       error.status = 500
@@ -51,9 +59,10 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', validateLoggedMiddleware, async (req, res, next) => {
   const { id } = req.params
   const { balance } = req.body
+  const { userId } = req
   const validation = validateSchema(balance, balanceUpdateSchema)
   if (validation.length > 0) {
     const error = new Error(`Errors in the request: ${validation} `)
@@ -62,8 +71,8 @@ router.patch('/:id', async (req, res, next) => {
   }
 
   try {
-    const [updatedRecord] = await editBalance(id, balance)
-    console.log(updatedRecord)
+    const [updatedRecord] = await editBalance(id, balance, userId)
+
     if (updatedRecord === 0) {
       return res.json({ message: 'No record founded with the id provided' })
     }
@@ -74,10 +83,12 @@ router.patch('/:id', async (req, res, next) => {
     next(error)
   }
 })
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', validateLoggedMiddleware, async (req, res, next) => {
   const { id } = req.params
+  const { userId } = req
+
   try {
-    const deletedBalance = await deleteBalance(id)
+    const deletedBalance = await deleteBalance(id, userId)
     if (deletedBalance === 0) {
       return res.json({ message: 'No record founded with the id provided' })
     }
