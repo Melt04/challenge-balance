@@ -2,15 +2,10 @@
 
 const Sequelize = require('sequelize')
 const db = require('../index')
-const Balance = require('./balances')
+
 const TypesOperation = db.define('type_operation', {
   name: {
     type: Sequelize.TEXT,
-    allowNull: false,
-  },
-})
-TypesOperation.hasOne(Balance, {
-  foreignKey: {
     allowNull: false,
   },
 })
@@ -23,5 +18,15 @@ async function initValues() {
     throw new Error(e.message)
   }
 }
+/* TypesOperation.hasOne(Balance, {
+  foreignKey: {
+    allowNull: false,
+  },
+}) */
+/* TypesOperation.hasOne(Category, {
+  foreignKey: {
+    allowNull: false,
+  },
+}) */
 
 module.exports = { TypesOperation, initValues }

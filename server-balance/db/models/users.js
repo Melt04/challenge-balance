@@ -16,10 +16,10 @@ const User = db.define('user', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-})
+}) /* 
 User.hasOne(Balance, {
   foreignKey: {
     allowNull: false,
   },
-})
+}) */
 module.exports = User
