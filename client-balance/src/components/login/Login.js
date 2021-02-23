@@ -6,20 +6,16 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Spinner from 'react-bootstrap/Spinner'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import { useUserContext } from '../../context/UserContextProvider'
+import {
+  useUserContext,
+  URL_CREATE_USER,
+  URL_SIGNIN_USER,
+} from '../../context/UserContextProvider'
 import './login.css'
 import Alert from 'react-bootstrap/Alert'
-const initValue = {
-  email: '',
-  password: '',
-}
-function Login() {
-  const {
-    loading,
-    error,
 
-    requestUser,
-  } = useUserContext()
+function Login() {
+  const { loading, error, requestUser } = useUserContext()
   const [userInput, setUserInput] = useState({ email: '', password: '' })
   const [userInputRegister, setUserInputRegister] = useState({ name: '' })
   const [state, setState] = useState('register')
@@ -97,19 +93,16 @@ function Login() {
             variant="primary"
             onClick={() =>
               state === 'register'
-                ? requestUser('http://localhost:3002/api/users', {
+                ? requestUser(URL_CREATE_USER, {
                     ...userInput,
                     ...userInputRegister,
                   })
-                : requestUser(
-                    'http://localhost:3002/api/users/signin',
-                    userInput
-                  )
+                : requestUser(URL_SIGNIN_USER, userInput)
             }
           >
             {state.toUpperCase()}
           </Button>
-          {error && <Alert variant={'danger'}>Wrong credentials</Alert>}
+          {error && <Alert variant={'danger'}>{error}</Alert>}
         </Form>
       )}
     </Container>

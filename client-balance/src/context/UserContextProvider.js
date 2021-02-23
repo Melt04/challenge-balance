@@ -3,6 +3,8 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
 const UserContext = createContext({})
+export const URL_CREATE_USER = 'http://localhost:3002/api/users'
+export const URL_SIGNIN_USER = 'http://localhost:3002/api/users/signin'
 
 export const useUserContext = () => useContext(UserContext)
 
@@ -13,7 +15,7 @@ function UserContextProvider({ children }) {
   })
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(null)
   useEffect(() => {
     const token = localStorage.getItem('token-balance')
     if (token) {
@@ -28,7 +30,7 @@ function UserContextProvider({ children }) {
   }
   const requestUser = async (url, userInput) => {
     setLoading(true)
-    setError(false)
+    setError(null)
     const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({ user: { ...userInput } }),
@@ -42,7 +44,7 @@ function UserContextProvider({ children }) {
       localStorage.setItem('token-balance', data.token)
       setIsLoggedIn(true)
     } else {
-      setError(true)
+      setError(data.error)
     }
   }
 

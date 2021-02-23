@@ -1,8 +1,7 @@
 /** @format */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useBalanceContext } from '../../context/BalanceContextProvider'
-import { useUserContext } from '../../context/UserContextProvider'
 
 import OperationList from '../../components/OperationList/OperationList'
 import Spinner from 'react-bootstrap/Spinner'
@@ -11,10 +10,17 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 function BalanceContainer() {
-  const { typeOperation, operations, balance, loading } = useBalanceContext()
-
+  const {
+    typeOperation,
+    operations,
+    balance,
+    loading,
+    fetchTypeOperations,
+    fetchBalance,
+  } = useBalanceContext()
+  console.log(operations)
   const handleEditOperation = async (id, Operation) => {
-    await fetch('http://localhost:3002/api/balance/10', {
+    await fetch(`http://localhost:3002/api/balance/${id}`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -27,7 +33,15 @@ function BalanceContainer() {
       }),
     })
   }
-
+  useEffect(async () => {
+    await fetchTypeOperations()
+  }, [])
+  useEffect(async () => {
+    fetchBalance(typeOperation)
+    return () => {
+      console.log('unmonuntin')
+    }
+  }, [typeOperation])
   return (
     <Container fluid="md" style={{ textAlign: 'center' }}>
       {loading ? (

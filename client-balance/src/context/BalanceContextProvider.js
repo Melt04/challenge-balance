@@ -1,6 +1,8 @@
 /** @format */
 
-import React, { useContext, useEffect, createContext, useState } from 'react'
+import React, { useContext, createContext, useState } from 'react'
+
+const URL_BALANCES = 'http://localhost:3002/api/balance/'
 
 const BalanceContext = createContext({})
 export const useBalanceContext = () => useContext(BalanceContext)
@@ -16,17 +18,22 @@ function BalanceContextProvider({ children }) {
   const handleDelete = async (id) => {
     setError(false)
     setSucces(false)
-    const response = await fetch(`http://localhost:3002/api/balance/${id}`, {
+    const token = localStorage.getItem('token-balance')
+    const response = await fetch(`${URL_BALANCES}${id}`, {
       method: 'DELETE',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     })
+
     await response.json()
-    setRefresh(!refresh)
+    setOperations(operations.filter((op) => op.id !== id))
   }
   const handleEdit = async (editOperation, id) => {
     setError(false)
     setSucces(false)
     try {
-      const response = await fetch(`http://localhost:3002/api/balance/${id}`, {
+      const response = await fetch(`${URL_BALANCES}${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +59,7 @@ function BalanceContextProvider({ children }) {
     setError(false)
     setSucces(false)
     try {
-      const response = await fetch('http://localhost:3002/api/balance', {
+      const response = await fetch(URL_BALANCES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,22 +83,20 @@ function BalanceContextProvider({ children }) {
       console.dir(e.message)
     }
   }
-  const fetchTypeOperations = async () => {
-    let response = await fetch(`
-    http://localhost:3002/api/typeOperations/
-    `)
-    const typeOperationJson = await response.json()
-    let getTypeOperation = {}
-    typeOperationJson.forEach(({ id, name }) => {
-      getTypeOperation = { ...getTypeOperation, ...{ [id]: name } }
-    })
-    setTypeOperation(getTypeOperation)
-  }
   const fetchBalance = async (typeOperation) => {
     if (!typeOperation) return
     setLoading(true)
     setSucces(null)
-    const response = await fetch('http://localhost:3002/api/balance')
+    const token = localStorage.getItem('token-balance')
+    const response = await fetch(`${URL_BALANCES}balances`, {
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+    if (response.status !== 200) {
+      return
+    }
     const balanceJson = await response.json()
     let getBalance = 0
     let getOperations = []
@@ -109,12 +114,27 @@ function BalanceContextProvider({ children }) {
     setBalance(getBalance)
     setOperations(getOperations)
   }
-  useEffect(async () => {
+  const fetchTypeOperations = async () => {
+    let response = await fetch(`
+    http://localhost:3002/api/typeOperations/
+    `)
+    const typeOperationJson = await response.json()
+    let getTypeOperation = {}
+    typeOperationJson.forEach(({ id, name }) => {
+      getTypeOperation = { ...getTypeOperation, ...{ [id]: name } }
+    })
+    setTypeOperation(getTypeOperation)
+  }
+
+  /*   useEffect(async () => {
     await fetchTypeOperations()
   }, [])
   useEffect(async () => {
     fetchBalance(typeOperation)
-  }, [typeOperation, refresh])
+    return () => {
+      console.log('unmonuntin')
+    }
+  }, [typeOperation, refresh]) */
   return (
     <BalanceContext.Provider
       value={{
@@ -126,6 +146,9 @@ function BalanceContextProvider({ children }) {
         loading,
         error,
         handleEdit,
+        fetchTypeOperations,
+        fetchBalance,
+
         success,
       }}
     >
