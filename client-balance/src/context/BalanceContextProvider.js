@@ -19,7 +19,7 @@ function BalanceContextProvider({ children }) {
     const response = await fetch(`http://localhost:3002/api/balance/${id}`, {
       method: 'DELETE',
     })
-    const data = await response.json()
+    await response.json()
     setRefresh(!refresh)
   }
   const handleEdit = async (editOperation, id) => {
@@ -95,7 +95,7 @@ function BalanceContextProvider({ children }) {
     const balanceJson = await response.json()
     let getBalance = 0
     let getOperations = []
-    balanceJson.map((operation, index) => {
+    balanceJson.forEach((operation, index) => {
       if (index < 10) {
         getOperations.push(operation)
       }

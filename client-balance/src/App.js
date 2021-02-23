@@ -5,33 +5,43 @@ import NavBar from './components/navbar/NavBar'
 import BalanceContainer from './containers/BalanceContainer/BalanceContainer'
 import BalanceContextProvider from './context/BalanceContextProvider'
 
-import NotFound from './components/NotFound/NotFound'
-import { BrowserRouter, Switch, Route, Link } from 'react-router-dom'
+import Login from './components/login/Login'
 
+import NotFound from './components/NotFound/NotFound'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { useUserContext } from './context/UserContextProvider'
 import OperationContainer from './containers/OperationContainer/OperationContainer'
 import OperationEditContainer from './containers/OperationEditContainer/OperationEditContainer'
 
 function App() {
+  const { isLoggedIn } = useUserContext()
+
   return (
     <div className="App">
       <BrowserRouter>
         <BalanceContextProvider>
           <NavBar />
-          <Switch>
-            <Route exact path="/">
-              <BalanceContainer />
-            </Route>
-            <Route exact path="/form">
-              <OperationContainer />
-            </Route>
-            <Route exact path="/edit/:id">
-              <OperationEditContainer />
-            </Route>
+          {!isLoggedIn ? (
+            <>
+              <Login />
+            </>
+          ) : (
+            <Switch>
+              <Route exact path="/">
+                <BalanceContainer />
+              </Route>
+              <Route exact path="/form">
+                <OperationContainer />
+              </Route>
+              <Route exact path="/edit/:id">
+                <OperationEditContainer />
+              </Route>
 
-            <Route>
-              <NotFound />
-            </Route>
-          </Switch>
+              <Route>
+                <NotFound />
+              </Route>
+            </Switch>
+          )}
         </BalanceContextProvider>
       </BrowserRouter>
     </div>

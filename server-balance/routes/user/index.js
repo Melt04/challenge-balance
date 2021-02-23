@@ -40,10 +40,12 @@ router.post('/', async (req, res, next) => {
 })
 router.post('/signin', async (req, res, next) => {
   const { email, password } = req.body.user
+  console.log(email, password)
+
   try {
     const user = await findUserByEmail(email)
     if (!user) {
-      return res.status(200).json({ message: 'No user found' })
+      return res.status(404).json({ error: 'No user found' })
     }
     const hash = user.password
     const result = await comparePassword(password, hash)
@@ -51,12 +53,12 @@ router.post('/signin', async (req, res, next) => {
       const token = generateToken({ email })
       res.status(200).json({ token })
     } else {
-      res.send('Error')
+      res.status(404).json({ error: 'User not found' })
     }
   } catch (e) {
     const error = new Error(e.message)
     error.status = 500
-    next(errro)
+    next(error)
   }
 })
 
