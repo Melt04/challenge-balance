@@ -5,20 +5,49 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Spinner from 'react-bootstrap/Spinner'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import { useUserContext } from '../../context/UserContextProvider'
+import './login.css'
 import Alert from 'react-bootstrap/Alert'
-
+const initValue = {
+  email: '',
+  password: '',
+}
 function Login() {
-  const { loginUser, loading, error } = useUserContext()
-  const [userInput, setUserInput] = useState({
-    email: '',
-    password: '',
-  })
+  const {
+    loading,
+    error,
+
+    requestUser,
+  } = useUserContext()
+  const [userInput, setUserInput] = useState({ email: '', password: '' })
+  const [userInputRegister, setUserInputRegister] = useState({ name: '' })
+  const [state, setState] = useState('register')
   const onChangeHandler = (event) => {
     setUserInput({ ...userInput, [event.target.name]: event.target.value })
   }
+  const onChangeRegisterHandler = (event) => {
+    setUserInputRegister({
+      ...userInputRegister,
+      [event.target.name]: event.target.value,
+    })
+  }
+  const changeMode = (event) => {
+    setState(event.target.name)
+  }
   return (
-    <Container>
+    <Container className="user-form">
+      <div className="user-form-button-container ">
+        <ButtonGroup className="user-form-option">
+          <Button variant="info" name="login" onClick={changeMode}>
+            Loggin
+          </Button>
+          <Button variant="info" active name="register" onClick={changeMode}>
+            Register
+          </Button>
+        </ButtonGroup>
+      </div>
+      <hr></hr>
       {loading ? (
         <Spinner
           animation="border"
@@ -30,7 +59,19 @@ function Login() {
         </Spinner>
       ) : (
         <Form>
-          <Form.Group controlId="formBasicEmail">
+          <Form.Group>
+            {state === 'register' && (
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  value={userInputRegister.name}
+                  type="text"
+                  placeholder="Name"
+                  name="name"
+                  onChange={onChangeRegisterHandler}
+                />
+              </Form.Group>
+            )}
             <Form.Label>Email address</Form.Label>
             <Form.Control
               value={userInput.email}
@@ -41,7 +82,7 @@ function Login() {
             />
           </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
+          <Form.Group>
             <Form.Label>Password</Form.Label>
             <Form.Control
               value={userInput.password}
@@ -52,8 +93,21 @@ function Login() {
             />
           </Form.Group>
 
-          <Button variant="primary" onClick={() => loginUser(userInput)}>
-            Login
+          <Button
+            variant="primary"
+            onClick={() =>
+              state === 'register'
+                ? requestUser('http://localhost:3002/api/users', {
+                    ...userInput,
+                    ...userInputRegister,
+                  })
+                : requestUser(
+                    'http://localhost:3002/api/users/signin',
+                    userInput
+                  )
+            }
+          >
+            {state.toUpperCase()}
           </Button>
           {error && <Alert variant={'danger'}>Wrong credentials</Alert>}
         </Form>

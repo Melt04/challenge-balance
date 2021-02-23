@@ -21,10 +21,15 @@ function UserContextProvider({ children }) {
       setIsLoggedIn(true)
     }
   }, [])
-  const loginUser = async (userInput) => {
+  const logOut = () => {
+    localStorage.removeItem('token-balance')
+    setUser({ name: '', email: '' })
+    setIsLoggedIn(false)
+  }
+  const requestUser = async (url, userInput) => {
     setLoading(true)
     setError(false)
-    const response = await fetch('http://localhost:3002/api/users/signin', {
+    const response = await fetch(url, {
       method: 'POST',
       body: JSON.stringify({ user: { ...userInput } }),
       headers: {
@@ -40,9 +45,19 @@ function UserContextProvider({ children }) {
       setError(true)
     }
   }
+
   return (
     <UserContext.Provider
-      value={{ user, loginUser, setIsLoggedIn, isLoggedIn, loading, error }}
+      value={{
+        user,
+
+        setIsLoggedIn,
+        isLoggedIn,
+        loading,
+        error,
+        requestUser,
+        logOut,
+      }}
     >
       {children}
     </UserContext.Provider>

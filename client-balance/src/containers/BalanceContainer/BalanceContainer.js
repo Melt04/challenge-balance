@@ -12,7 +12,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 function BalanceContainer() {
   const { typeOperation, operations, balance, loading } = useBalanceContext()
-  const { user } = useUserContext()
 
   const handleEditOperation = async (id, Operation) => {
     await fetch('http://localhost:3002/api/balance/10', {

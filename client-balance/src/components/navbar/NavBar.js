@@ -1,12 +1,13 @@
 /** @format */
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-
+import { useUserContext } from '../../context/UserContextProvider'
 import React from 'react'
 
 import { LinkContainer } from 'react-router-bootstrap'
 
 function NavBar() {
+  const { isLoggedIn, logOut } = useUserContext()
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Navbar.Brand>Presupuesto</Navbar.Brand>
@@ -28,6 +29,11 @@ function NavBar() {
           <LinkContainer to="/">
             <Nav.Link>HOME</Nav.Link>
           </LinkContainer>
+          {isLoggedIn && (
+            <LinkContainer to="/">
+              <Nav.Link onClick={logOut}>LOGOUT</Nav.Link>
+            </LinkContainer>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
