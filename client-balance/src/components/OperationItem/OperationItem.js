@@ -11,8 +11,11 @@ import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 function OperationItem({ operationItem, index, typeOperation }) {
   const operation = typeOperation[operationItem.typeOperationId]
-  const { handleDelete } = useBalanceContext()
+  const { handleDelete, category } = useBalanceContext()
   const modifier = useQuery().get('modifier')
+  const categoryData = category.find(
+    (cat) => cat.id === operationItem.categoryId
+  )
 
   return (
     <Row className="row-operation-item">
@@ -23,6 +26,7 @@ function OperationItem({ operationItem, index, typeOperation }) {
       <Col md>Concepto : {operationItem.concepto}</Col>
       <Col md>Tipo : {operation}</Col>
       <Col md>Fecha : {operationItem.fecha.slice(0, 10)}</Col>
+      <Col md>Categoria : {categoryData?.name}</Col>
 
       {modifier === 'edit' && (
         <Col md>

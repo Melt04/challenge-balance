@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import Spinner from 'react-bootstrap/Spinner'
 import OperationForm from '../../components/OperationForm/OperationForm'
@@ -14,13 +14,18 @@ function OperationContainer({ initOperation }) {
     handlePost,
     loading,
     error,
+    fetchTypeOperations,
+    fetchBalance,
+    fetchCategory,
     success,
+    category,
   } = useBalanceContext()
   let history = useHistory()
   const initValue = initOperation || {
     concepto: '',
     monto: '',
     typeOperationId: '',
+    categoryId: '',
     fecha: new Date().toISOString().slice(0, 10),
   }
   const [newOperation, setNewOperation] = useState(initValue)
@@ -28,20 +33,42 @@ function OperationContainer({ initOperation }) {
   const onChangeHandler = (e) => {
     const { target } = e
     let { name, value } = target
-    if (name === 'monto' || name === 'typeOperationId') {
+    console.log(name)
+    if (
+      name === 'monto' ||
+      name === 'typeOperationId' ||
+      name === 'categoryId'
+    ) {
       value = parseFloat(value)
     }
     setNewOperation({ ...newOperation, [name]: value })
   }
   const submitHandler = async (e) => {
     e.preventDefault()
-    console.log(newOperation)
+
     await handlePost(newOperation)
   }
   const clearHandler = () => {
     setNewOperation(initValue)
   }
-
+  useEffect(() => {
+    async function fetch() {
+      await fetchTypeOperations()
+    }
+    fetch()
+  }, [fetchTypeOperations])
+  useEffect(() => {
+    async function fetch() {
+      fetchBalance(typeOperation)
+    }
+    fetch()
+  }, [typeOperation, fetchBalance])
+  useEffect(() => {
+    async function fetch() {
+      await fetchCategory(typeOperation)
+    }
+    fetch()
+  }, [typeOperation, fetchCategory])
   return (
     <div>
       {success && history.push('/')}
@@ -52,6 +79,7 @@ function OperationContainer({ initOperation }) {
           onChangeHandler={onChangeHandler}
           newOperation={newOperation}
           clearHandler={clearHandler}
+          category={category}
         />
       ) : (
         <Container fluid style={{ textAlign: 'center' }}>
@@ -70,6 +98,7 @@ function OperationContainer({ initOperation }) {
           <Alert variant="danger">{error}</Alert>
         </Container>
       )}
+      <button onClick={() => console.log(newOperation)}>Click</button>
     </div>
   )
 }

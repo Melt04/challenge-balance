@@ -19,6 +19,10 @@ const balanceCreateSchema = {
       type: 'number',
       required: true,
     },
+    categoryId: {
+      type: 'number',
+      required: true,
+    },
   },
   additionalProperties: false,
 }

@@ -12,6 +12,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { useUserContext } from './context/UserContextProvider'
 import OperationContainer from './containers/OperationContainer/OperationContainer'
 import OperationEditContainer from './containers/OperationEditContainer/OperationEditContainer'
+import CategoryContainer from './containers/CategoryContainer/CategoryContainer'
 
 function App() {
   const { isLoggedIn } = useUserContext()
@@ -36,7 +37,9 @@ function App() {
               <Route exact path="/edit/:id">
                 <OperationEditContainer />
               </Route>
-
+              <Route exact path="/category">
+                <CategoryContainer />
+              </Route>
               <Route>
                 <NotFound />
               </Route>

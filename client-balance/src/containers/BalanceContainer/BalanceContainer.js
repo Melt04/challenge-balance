@@ -17,8 +17,9 @@ function BalanceContainer() {
     loading,
     fetchTypeOperations,
     fetchBalance,
+    fetchCategory,
   } = useBalanceContext()
-  console.log(operations)
+
   const handleEditOperation = async (id, Operation) => {
     await fetch(`http://localhost:3002/api/balance/${id}`, {
       method: 'PATCH',
@@ -33,15 +34,24 @@ function BalanceContainer() {
       }),
     })
   }
-  useEffect(async () => {
-    await fetchTypeOperations()
-  }, [])
-  useEffect(async () => {
-    fetchBalance(typeOperation)
-    return () => {
-      console.log('unmonuntin')
+  useEffect(() => {
+    async function fetch() {
+      await fetchTypeOperations()
     }
-  }, [typeOperation])
+    fetch()
+  }, [fetchTypeOperations])
+  useEffect(() => {
+    async function fetch() {
+      await fetchBalance(typeOperation)
+    }
+    fetch()
+  }, [typeOperation, fetchBalance])
+  useEffect(() => {
+    async function fetch() {
+      await fetchCategory(typeOperation)
+    }
+    fetch()
+  }, [typeOperation, fetchCategory])
   return (
     <Container fluid="md" style={{ textAlign: 'center' }}>
       {loading ? (
