@@ -17,6 +17,7 @@ const {
   createBalance,
   deleteBalance,
   getBalanceById,
+  getBalanceByCategory,
 } = require('../../controllers/balance')
 
 router.get('/', async (_, res, next) => {
@@ -34,6 +35,15 @@ router.get('/balances', validateLoggedMiddleware, async (req, res) => {
   const balance = await getBalanceById(userId)
   return res.status(200).json(balance)
 })
+router.get(
+  '/category/:categoryId',
+  validateLoggedMiddleware,
+  async (req, res) => {
+    const { categoryId } = req.params
+    const balance = await getBalanceByCategory(categoryId)
+    return res.status(200).json(balance)
+  }
+)
 router.post('/', validateLoggedMiddleware, async (req, res, next) => {
   const { balance } = req.body
   const { userId } = req

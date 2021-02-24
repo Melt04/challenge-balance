@@ -98,7 +98,6 @@ function OperationContainer({ initOperation }) {
           <Alert variant="danger">{error}</Alert>
         </Container>
       )}
-      <button onClick={() => console.log(newOperation)}>Click</button>
     </div>
   )
 }

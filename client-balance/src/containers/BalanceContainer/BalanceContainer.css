@@ -11,3 +11,10 @@
 .column-balance-container {
   width: 100%;
 }
+.balance-form-filter {
+  padding: 10px;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

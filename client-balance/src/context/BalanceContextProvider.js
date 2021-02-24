@@ -89,12 +89,16 @@ function BalanceContextProvider({ children }) {
       setError(e.message)
     }
   }
-  const fetchBalance = useCallback(async (typeOperation) => {
+  const fetchBalance = useCallback(async (typeOperation, category = null) => {
     if (!typeOperation) return
     setLoading(true)
     setSucces(null)
     const token = localStorage.getItem('token-balance')
-    const response = await fetch(`${URL_BALANCES}balances`, {
+    let url = `${URL_BALANCES}balances`
+    if (category) {
+      url = `${URL_BALANCES}category/${category}`
+    }
+    const response = await fetch(url, {
       headers: {
         'Content-Type': 'application/json',
         authorization: `Bearer ${token}`,
@@ -103,7 +107,9 @@ function BalanceContextProvider({ children }) {
     if (response.status !== 200) {
       return
     }
+
     const balanceJson = await response.json()
+    console.log(balanceJson)
     let getBalance = 0
     let getOperations = []
     balanceJson.forEach((operation, index) => {
@@ -120,6 +126,10 @@ function BalanceContextProvider({ children }) {
     setBalance(getBalance)
     setOperations(getOperations)
   }, [])
+  const filterOperationByCat = (cat) => {
+    const filtered = operations.filter((op) => op.categoryId === cat)
+    console.log(filtered)
+  }
   const fetchCategory = useCallback(async (typeOperation) => {
     if (!typeOperation) return
     setLoading(true)
@@ -166,6 +176,7 @@ function BalanceContextProvider({ children }) {
         fetchCategory,
         category,
         success,
+        filterOperationByCat,
       }}
     >
       {children}

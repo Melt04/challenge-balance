@@ -56,9 +56,9 @@ function OperationForm({
             </Col>
           </Form.Group>
           {!edit && (
-            <Form.Group controlId="exampleForm.SelectCustom" as={Row}>
+            <Form.Group as={Row}>
               <Form.Label column sm={2}>
-                Custom select
+                Categoria
               </Form.Label>
               <Col sm={10}>
                 <Form.Control

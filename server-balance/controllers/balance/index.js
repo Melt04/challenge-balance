@@ -5,6 +5,13 @@ const { getDecodedToken } = require('../../utils')
 const getAllbalances = () => {
   return Balance.findAll()
 }
+const getBalanceByCategory = (categoryId) => {
+  return Balance.findAll({
+    where: {
+      categoryId,
+    },
+  })
+}
 const createBalance = async (balance, id) => {
   return Balance.create({ ...balance, userId: id })
 }
@@ -32,4 +39,5 @@ module.exports = {
   editBalance,
   deleteBalance,
   getBalanceById,
+  getBalanceByCategory,
 }
