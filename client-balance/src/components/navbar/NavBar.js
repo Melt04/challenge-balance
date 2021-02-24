@@ -24,11 +24,15 @@ function NavBar() {
           <LinkContainer to="/?modifier=delete">
             <Nav.Link>Baja</Nav.Link>
           </LinkContainer>
+          <LinkContainer to="/category">
+            <Nav.Link>Alta Categoria</Nav.Link>
+          </LinkContainer>
         </Nav>
         <Nav>
           <LinkContainer to="/">
             <Nav.Link>HOME</Nav.Link>
           </LinkContainer>
+
           {isLoggedIn && (
             <LinkContainer to="/">
               <Nav.Link onClick={logOut}>LOGOUT</Nav.Link>

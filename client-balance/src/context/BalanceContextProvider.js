@@ -52,6 +52,7 @@ function BalanceContextProvider({ children }) {
       const data = await response.json()
       if (response.status !== 200) {
         throw new Error(data.message)
+        setLoading(false)
       }
       setSucces(true)
       setRefresh(!refresh)
@@ -105,11 +106,13 @@ function BalanceContextProvider({ children }) {
       },
     })
     if (response.status !== 200) {
+      const data = await response.json()
+      setError(data.error)
       return
     }
 
     const balanceJson = await response.json()
-    console.log(balanceJson)
+
     let getBalance = 0
     let getOperations = []
     balanceJson.forEach((operation, index) => {
@@ -130,16 +133,21 @@ function BalanceContextProvider({ children }) {
     const filtered = operations.filter((op) => op.categoryId === cat)
     console.log(filtered)
   }
+
   const fetchCategory = useCallback(async (typeOperation) => {
     if (!typeOperation) return
     setLoading(true)
     setSucces(null)
-
     const token = localStorage.getItem('token-balance')
     const response = await fetch(URL_CATEGORY, {
       headers: { authorization: `Bearer ${token}` },
     })
-    if (response.status !== 200) return
+    if (response.status !== 200) {
+      const data = response.json()
+
+      setLoading(false)
+      setError(data.error)
+    }
     const data = await response.json()
     let categories = data.map(({ id, name, typeOperationId }) => {
       return {
@@ -150,6 +158,32 @@ function BalanceContextProvider({ children }) {
     })
     setCategory(categories)
   }, [])
+  const createCategory = async (categoryData) => {
+    if (!typeOperation) return
+    setLoading(true)
+    setSucces(null)
+
+    const token = localStorage.getItem('token-balance')
+    const response = await fetch(URL_CATEGORY, {
+      method: 'POST',
+      body: JSON.stringify({ category: { ...categoryData } }),
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (response.status !== 201) {
+      console.log('Ssadas')
+      const data = await response.json()
+      setLoading(false)
+      setError(data.error)
+      return
+    } else {
+      setLoading(false)
+      setSucces(true)
+    }
+  }
   const fetchTypeOperations = useCallback(async () => {
     let response = await fetch(URL_TYPE_OPERATIONS)
     const typeOperationJson = await response.json()
@@ -177,6 +211,7 @@ function BalanceContextProvider({ children }) {
         category,
         success,
         filterOperationByCat,
+        createCategory,
       }}
     >
       {children}

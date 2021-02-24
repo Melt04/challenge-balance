@@ -22,6 +22,7 @@ function BalanceContainer() {
     fetchBalance,
     fetchCategory,
     category,
+    createCategory,
   } = useBalanceContext()
   const [filter, setFilter] = useState(null)
   const handleEditOperation = async (id, Operation) => {
@@ -130,6 +131,11 @@ function BalanceContainer() {
           </Row>
         </>
       )}
+      <button
+        onClick={() => createCategory({ name: 'Comida', typeOperationId: 1 })}
+      >
+        Create
+      </button>
     </Container>
   )
 }

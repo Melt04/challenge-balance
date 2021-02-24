@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState } from 'react'
+import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -72,17 +72,17 @@ function OperationForm({
                   <option value="" selected>
                     Por favor seleccione una opcion..
                   </option>
-                  {category.map((cat, ixd) => {
-                    if (cat.id !== typeOperationId) {
-                      return
-                    }
-
-                    return (
-                      <option key={ixd} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    )
-                  })}
+                  {category
+                    .filter((cat) => cat.typeOperationId === typeOperationId)
+                    .map((cat, ixd) => {
+                      console.log(cat)
+                      return (
+                        <option key={ixd} value={cat.id}>
+                          {cat.name}
+                        </option>
+                      )
+                    })}
+                  )}
                 </Form.Control>
               </Col>
             </Form.Group>
